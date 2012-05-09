@@ -5,6 +5,7 @@
 
 express = require("express")
 routes = require("./routes")
+db = require './models/db'
 
 app = module.exports = express.createServer()
 
@@ -16,7 +17,7 @@ app.configure ->
   app.use express.bodyParser()
   app.use express.methodOverride()
   app.use app.router
-  app.use express.static(__dirname + "/public")
+  app.use express.static(__dirname + "/client")
 
 app.configure "development", ->
   app.use express.errorHandler(
@@ -27,8 +28,10 @@ app.configure "development", ->
 app.configure "production", ->
   app.use express.errorHandler()
 
-# Routes
+# DB initialize
+db.initialize()
 
+# Routes
 app.get "/", routes.index
 app.listen 3000, ->
   console.log "Express server listening on port %d in %s mode", app.address().port, app.settings.env
