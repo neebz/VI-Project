@@ -45,6 +45,7 @@
     AppView.prototype.initialize = function() {
       var self;
       self = this;
+      Posts.bind("add", this.renderNewPost, this);
       return Posts.fetch({
         success: function() {
           return self.render();
@@ -66,19 +67,24 @@
       new_post = new Post({
         post_message: text
       });
-      Posts.add(new_post);
-      return this.render();
+      return Posts.add(new_post);
+    };
+
+    AppView.prototype.renderNewPost = function(new_post) {
+      var a, posts_list_el;
+      posts_list_el = this.$el.find("#posts_list");
+      a = new PostView(new_post);
+      return posts_list_el.prepend(a.render().el);
     };
 
     AppView.prototype.render = function() {
       var posts_list_el;
       console.log(this.el);
       posts_list_el = this.$el.find("#posts_list");
-      posts_list_el.empty();
       return Posts.forEach(function(p) {
         var a;
         a = new PostView(p);
-        return posts_list_el.append(a.render().el);
+        return posts_list_el.prepend(a.render().el);
       });
     };
 
@@ -98,6 +104,17 @@
 
     PostView.prototype.initialize = function(model) {
       return this.model = model;
+    };
+
+    PostView.prototype.events = function() {
+      return {
+        "click #delete_post": "deletePost"
+      };
+    };
+
+    PostView.prototype.deletePost = function() {
+      this.model.destroy();
+      return this.$el.remove();
     };
 
     PostView.prototype.render = function() {
