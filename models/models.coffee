@@ -4,7 +4,8 @@ module.exports = ->
 
 	Post = new mongoose.Schema {
 		message: String,
-		starred: Boolean
+		starred: Boolean,
+		created_at: Date
 	}
 
 	Post.path('message').validate  (v) ->

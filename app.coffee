@@ -33,7 +33,8 @@ db.initialize()
 
 # Routes
 app.get "/", routes.index
-app.get "/posts", routes.posts
+app.get "/posts", routes.posts.read
+app.post "/posts", routes.posts.create
 
 #run app
 app.listen 3000, ->

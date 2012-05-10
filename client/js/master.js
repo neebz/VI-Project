@@ -1,6 +1,5 @@
 (function() {
-  var Posts,
-    __hasProp = Object.prototype.hasOwnProperty,
+  var __hasProp = Object.prototype.hasOwnProperty,
     __extends = function(child, parent) { for (var key in parent) { if (__hasProp.call(parent, key)) child[key] = parent[key]; } function ctor() { this.constructor = child; } ctor.prototype = parent.prototype; child.prototype = new ctor; child.__super__ = parent.prototype; return child; };
 
   window.Post = (function(_super) {
@@ -31,7 +30,7 @@
 
   })(Backbone.Collection);
 
-  Posts = new PostsCollection;
+  window.Posts = new PostsCollection;
 
   window.AppView = (function(_super) {
 
@@ -61,18 +60,25 @@
     };
 
     AppView.prototype.addPost = function(e) {
+      var new_post, text;
       e.preventDefault();
-      return console.log("add new post in Posts");
+      text = $("#post_message").val();
+      new_post = new Post({
+        post_message: text
+      });
+      Posts.add(new_post);
+      return this.render();
     };
 
     AppView.prototype.render = function() {
-      var self;
+      var posts_list_el;
       console.log(this.el);
-      self = this;
+      posts_list_el = this.$el.find("#posts_list");
+      posts_list_el.empty();
       return Posts.forEach(function(p) {
         var a;
         a = new PostView(p);
-        return self.$el.append(a.html);
+        return posts_list_el.append(a.render().el);
       });
     };
 
@@ -96,7 +102,7 @@
 
     PostView.prototype.render = function() {
       var template;
-      template = _.template($(templateId).html());
+      template = _.template($(this.templateId).html());
       this.$el.html(template(this.model.toJSON()));
       return this;
     };

@@ -1,4 +1,4 @@
-Posts = new PostsCollection
+window.Posts = new PostsCollection
 
 class window.AppView extends Backbone.View
 	el: "#app_view"
@@ -16,14 +16,19 @@ class window.AppView extends Backbone.View
 
 	addPost: (e) ->
 		e.preventDefault()
-		console.log "add new post in Posts"
+		text = $("#post_message").val()
+		new_post = new Post {post_message: text}
+		#new_post.save()
+		Posts.add new_post
+		this.render()
 
 	render: ->
 		console.log @el
-		self = @
+		posts_list_el = @$el.find("#posts_list")
+		posts_list_el.empty()
 		Posts.forEach (p) ->
 			a = new PostView(p)
-			self.$el.append a.html
+			posts_list_el.append a.render().el
 
 
 
@@ -34,6 +39,6 @@ class window.PostView extends Backbone.View
 		@model = model
 
 	render: ->
-		template = _.template($(templateId).html())
+		template = _.template($(@templateId).html())
 		@$el.html(template(@model.toJSON()))
 		return @
