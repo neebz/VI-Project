@@ -1,6 +1,6 @@
-class Post extends Backbone.Model
+class window.Post extends Backbone.Model
 
 
-class PostsCollection extends Backbone.Collection
+class window.PostsCollection extends Backbone.Collection
 	model: Post
 	url: '/posts'

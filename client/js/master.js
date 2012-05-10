@@ -1,9 +1,9 @@
 (function() {
-  var AppView, Post, PostView, Posts, PostsCollection, app,
+  var Posts,
     __hasProp = Object.prototype.hasOwnProperty,
     __extends = function(child, parent) { for (var key in parent) { if (__hasProp.call(parent, key)) child[key] = parent[key]; } function ctor() { this.constructor = child; } ctor.prototype = parent.prototype; child.prototype = new ctor; child.__super__ = parent.prototype; return child; };
 
-  Post = (function(_super) {
+  window.Post = (function(_super) {
 
     __extends(Post, _super);
 
@@ -15,7 +15,7 @@
 
   })(Backbone.Model);
 
-  PostsCollection = (function(_super) {
+  window.PostsCollection = (function(_super) {
 
     __extends(PostsCollection, _super);
 
@@ -33,7 +33,7 @@
 
   Posts = new PostsCollection;
 
-  AppView = (function(_super) {
+  window.AppView = (function(_super) {
 
     __extends(AppView, _super);
 
@@ -44,21 +44,29 @@
     AppView.prototype.el = "#app_view";
 
     AppView.prototype.initialize = function() {
-      return Posts.fetch();
+      var self;
+      self = this;
+      return Posts.fetch({
+        success: function() {
+          return self.render();
+        }
+      });
     };
 
     AppView.prototype.events = function() {
       return {
-        "submit #new_post_form": "addPost"
+        "submit #new_post_form": "addPost",
+        "click #submit_post": "addPost"
       };
     };
 
-    AppView.prototype.addPost = function() {
+    AppView.prototype.addPost = function(e) {
+      e.preventDefault();
       return console.log("add new post in Posts");
     };
 
     AppView.prototype.render = function() {
-      console.log(Posts.length);
+      console.log(this.el);
       return Posts.forEach(function(p) {
         var a;
         a = new PostView(p);
@@ -70,7 +78,7 @@
 
   })(Backbone.View);
 
-  PostView = (function(_super) {
+  window.PostView = (function(_super) {
 
     __extends(PostView, _super);
 
@@ -94,7 +102,5 @@
     return PostView;
 
   })(Backbone.View);
-
-  app = new AppView;
 
 }).call(this);

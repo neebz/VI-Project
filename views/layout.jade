@@ -7,4 +7,6 @@ html
     script(src='/js/lib/underscore-min.js')
     script(src='/js/lib/backbone-min.js')
     script(src='/js/master.js')
-  body!= body
+    script $(document).ready(function() { console.log("ahan"); var app = new AppView(); });
+
+    body!= body

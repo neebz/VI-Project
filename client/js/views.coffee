@@ -1,26 +1,32 @@
 Posts = new PostsCollection
 
-class AppView extends Backbone.View
+class window.AppView extends Backbone.View
 	el: "#app_view"
 
 	initialize: ->
-		Posts.fetch()
+		self = this
+		Posts.fetch { 
+			success: -> self.render()
+		}
 
-	events: ->
+	events: -> {
 		"submit #new_post_form": "addPost"
+		"click #submit_post": "addPost"
+	}
 
-	addPost: ->
+	addPost: (e) ->
+		e.preventDefault()
 		console.log "add new post in Posts"
 
 	render: ->
-		console.log Posts.length
+		console.log this.el
 		Posts.forEach (p) ->
 			a = new PostView(p)
 			this.$el.append a.html
 
 
 
-class PostView extends Backbone.View
+class window.PostView extends Backbone.View
 	templateId: "#post_template"
 
 	initialize: (model) ->
@@ -30,6 +36,3 @@ class PostView extends Backbone.View
 		template = _.template($(templateId).html())
 		this.$el.html(template(this.model.toJSON()))
 		return this
-
-
-app = new AppView
