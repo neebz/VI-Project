@@ -66,11 +66,13 @@
     };
 
     AppView.prototype.render = function() {
+      var self;
       console.log(this.el);
+      self = this;
       return Posts.forEach(function(p) {
         var a;
         a = new PostView(p);
-        return this.$el.append(a.html);
+        return self.$el.append(a.html);
       });
     };
 

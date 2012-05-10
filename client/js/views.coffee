@@ -4,7 +4,7 @@ class window.AppView extends Backbone.View
 	el: "#app_view"
 
 	initialize: ->
-		self = this
+		self = @
 		Posts.fetch { 
 			success: -> self.render()
 		}
@@ -19,10 +19,11 @@ class window.AppView extends Backbone.View
 		console.log "add new post in Posts"
 
 	render: ->
-		console.log this.el
+		console.log @el
+		self = @
 		Posts.forEach (p) ->
 			a = new PostView(p)
-			this.$el.append a.html
+			self.$el.append a.html
 
 
 
@@ -30,9 +31,9 @@ class window.PostView extends Backbone.View
 	templateId: "#post_template"
 
 	initialize: (model) ->
-		this.model = model
+		@model = model
 
 	render: ->
 		template = _.template($(templateId).html())
-		this.$el.html(template(this.model.toJSON()))
-		return this
+		@$el.html(template(@model.toJSON()))
+		return @
