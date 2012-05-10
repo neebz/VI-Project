@@ -4,6 +4,7 @@ class window.AppView extends Backbone.View
 	el: "#app_view"
 
 	initialize: ->
+		@filer_type = null
 		self = @
 		Posts.bind "add", @renderOnePost, this
 		Posts.fetch { 
@@ -13,7 +14,20 @@ class window.AppView extends Backbone.View
 	events: -> {
 		"submit #new_post_form": "addPost"
 		"click #submit_post": "addPost"
+		"click #all" : "filterPosts"
+		"click #starred" : "filterPosts"
+		"click #unstarred" : "filterPosts"
 	}
+
+	filterPosts: (e) ->
+		e.preventDefault()
+		type = $(e.target).attr("id")
+		if type is "all"
+			@filter_type = null
+		else 
+			@filter_type = type is "starred"
+		@render()
+		
 
 	addPost: (e) ->
 		e.preventDefault()
@@ -29,9 +43,16 @@ class window.AppView extends Backbone.View
 
 	render: ->
 		console.log @el
-		posts_list_el = @$el.find("#posts_list")
+		@$el.find("#posts_list").empty()
 		self = @
-		Posts.forEach (p) -> self.renderOnePost p
+		if @filter_type is null
+			Posts.forEach (p) -> self.renderOnePost p
+		else
+			toggle = @filter_type
+			filtered = Posts.filter (i) -> i.get("starred") == toggle
+			filtered.forEach (p) -> self.renderOnePost p
+
+		@
 
 
 class window.PostView extends Backbone.View
@@ -57,7 +78,6 @@ class window.PostView extends Backbone.View
 		@render()
 
 	render: ->
-		console.log "rendering"
 		template = _.template($(@templateId).html())
 		@$el.html(template(@model.toJSON()))
 		@

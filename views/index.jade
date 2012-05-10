@@ -1,7 +1,15 @@
-h1= title
-p Welcome to #{title}
+h1= "Welcome to VI Project"
 
 div#app_view
+	
+	p
+		a#all(href="#") All
+		span  | 
+		a#starred(href="#") Starred
+		span  | 
+		a#unstarred(href="#") UnStarred
+
+
 	form#new_post_form
 		input#post_message(type="text")
 		button#submit_post(type="submit") Add Post

@@ -44,6 +44,7 @@
 
     AppView.prototype.initialize = function() {
       var self;
+      this.filer_type = null;
       self = this;
       Posts.bind("add", this.renderOnePost, this);
       return Posts.fetch({
@@ -56,8 +57,23 @@
     AppView.prototype.events = function() {
       return {
         "submit #new_post_form": "addPost",
-        "click #submit_post": "addPost"
+        "click #submit_post": "addPost",
+        "click #all": "filterPosts",
+        "click #starred": "filterPosts",
+        "click #unstarred": "filterPosts"
       };
+    };
+
+    AppView.prototype.filterPosts = function(e) {
+      var type;
+      e.preventDefault();
+      type = $(e.target).attr("id");
+      if (type === "all") {
+        this.filter_type = null;
+      } else {
+        this.filter_type = type === "starred";
+      }
+      return this.render();
     };
 
     AppView.prototype.addPost = function(e) {
@@ -80,13 +96,24 @@
     };
 
     AppView.prototype.render = function() {
-      var posts_list_el, self;
+      var filtered, self, toggle;
       console.log(this.el);
-      posts_list_el = this.$el.find("#posts_list");
+      this.$el.find("#posts_list").empty();
       self = this;
-      return Posts.forEach(function(p) {
-        return self.renderOnePost(p);
-      });
+      if (this.filter_type === null) {
+        Posts.forEach(function(p) {
+          return self.renderOnePost(p);
+        });
+      } else {
+        toggle = this.filter_type;
+        filtered = Posts.filter(function(i) {
+          return i.get("starred") === toggle;
+        });
+        filtered.forEach(function(p) {
+          return self.renderOnePost(p);
+        });
+      }
+      return this;
     };
 
     return AppView;
@@ -130,7 +157,6 @@
 
     PostView.prototype.render = function() {
       var template;
-      console.log("rendering");
       template = _.template($(this.templateId).html());
       this.$el.html(template(this.model.toJSON()));
       return this;
