@@ -8,8 +8,15 @@ div#app_view
 
 	div#posts_list
 
-
-
 script#post_template(type="text/template")
 	div.post_message <%= post_message %>
-	a#delete_post(href="#") Delete
+	div
+		a#delete_post.post_links(href="#") Delete
+	<% if (starred) { %>
+	div
+		a#star_toggle.post_links(href="#") Unstar
+	<% } else { %>
+	div
+		a#star_toggle.post_links(href="#") Star
+	<% } %>
+	hr

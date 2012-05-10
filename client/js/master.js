@@ -45,7 +45,7 @@
     AppView.prototype.initialize = function() {
       var self;
       self = this;
-      Posts.bind("add", this.renderNewPost, this);
+      Posts.bind("add", this.renderOnePost, this);
       return Posts.fetch({
         success: function() {
           return self.render();
@@ -65,26 +65,27 @@
       e.preventDefault();
       text = $("#post_message").val();
       new_post = new Post({
-        post_message: text
+        post_message: text,
+        created_at: new Date(),
+        starred: false
       });
       return Posts.add(new_post);
     };
 
-    AppView.prototype.renderNewPost = function(new_post) {
+    AppView.prototype.renderOnePost = function(the_post) {
       var a, posts_list_el;
       posts_list_el = this.$el.find("#posts_list");
-      a = new PostView(new_post);
+      a = new PostView(the_post);
       return posts_list_el.prepend(a.render().el);
     };
 
     AppView.prototype.render = function() {
-      var posts_list_el;
+      var posts_list_el, self;
       console.log(this.el);
       posts_list_el = this.$el.find("#posts_list");
+      self = this;
       return Posts.forEach(function(p) {
-        var a;
-        a = new PostView(p);
-        return posts_list_el.prepend(a.render().el);
+        return self.renderOnePost(p);
       });
     };
 
@@ -108,17 +109,28 @@
 
     PostView.prototype.events = function() {
       return {
-        "click #delete_post": "deletePost"
+        "click #delete_post": "deletePost",
+        "click #star_toggle": "starToggle"
       };
     };
 
-    PostView.prototype.deletePost = function() {
+    PostView.prototype.deletePost = function(e) {
+      e.preventDefault();
       this.model.destroy();
       return this.$el.remove();
     };
 
+    PostView.prototype.starToggle = function(e) {
+      var current;
+      e.preventDefault();
+      current = this.model.get("starred");
+      this.model.set("starred", !current);
+      return this.render();
+    };
+
     PostView.prototype.render = function() {
       var template;
+      console.log("rendering");
       template = _.template($(this.templateId).html());
       this.$el.html(template(this.model.toJSON()));
       return this;
