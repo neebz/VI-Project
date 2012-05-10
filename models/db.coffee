@@ -9,6 +9,6 @@ module.exports.initialize = () ->
 		if err
 			throw err
 		else
-			module.exports.instance = mongoose
+			exports.instance = mongoose
 	
 	
