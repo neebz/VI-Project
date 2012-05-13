@@ -17,9 +17,9 @@
     };
 
     Post.prototype.validate = function(attr) {
-      if (attr.post_message.length > 100) {
+      if (attr.message.length > 100) {
         return "post cannot be greater than 100 characters";
-      } else if (attr.post_message.length === 0) {
+      } else if (attr.message.length === 0) {
         return "post cannot be empty";
       } else {
 
@@ -116,10 +116,11 @@
       e.preventDefault();
       text = $("#post_message").val();
       new_post = new Post({
-        post_message: text,
+        message: text,
         starred: false
       });
-      return Posts.add(new_post);
+      Posts.add(new_post);
+      return new_post.save();
     };
 
     AppView.prototype.renderOnePost = function(the_post) {

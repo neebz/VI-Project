@@ -33,9 +33,9 @@ class window.AppView extends Backbone.View
 	addPost: (e) ->
 		e.preventDefault()
 		text = $("#post_message").val()
-		new_post = new Post {post_message: text, starred: false}
+		new_post = new Post {message: text, starred: false}
 		Posts.add new_post
-		#new_post.save()
+		new_post.save()
 
 	renderOnePost: (the_post) ->
 		posts_list_el = @$el.find("#posts_list")

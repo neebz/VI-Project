@@ -17,7 +17,7 @@ div#app_view
 	div#posts_list
 
 script#post_template(type="text/template")
-	div.post_message <%= post_message %>
+	div.post_message <%= message %>
 	div
 		a#delete_post.post_links(href="#") Delete
 	<% if (starred) { %>

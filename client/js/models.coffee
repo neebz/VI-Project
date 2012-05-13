@@ -7,9 +7,9 @@ class window.Post extends Backbone.Model
 		}
 
 	validate: (attr) ->
-		if attr.post_message.length > 100
+		if attr.message.length > 100
 			return "post cannot be greater than 100 characters"
-		else if attr.post_message.length == 0
+		else if attr.message.length == 0
 			return "post cannot be empty"
 		else
 			return

@@ -21,8 +21,8 @@ exports.posts.read = (req, res) ->
 #POST create Post
 exports.posts.create = (req, res) ->
 	models = require("../models/models")()
-	new_post = models.Post
-	new_post.message = req.body.post_message
+	new_post = new models.Post()
+	new_post.message = req.body.message
 	new_post.starred = false
 	new_post.created_at = new Date()
 	new_post.save (err) ->
