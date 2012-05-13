@@ -18,7 +18,7 @@ exports.posts.read = (req, res) ->
 		else
 			res.json err, 404
 
-#POST create Post
+# POST create Post
 exports.posts.create = (req, res) ->
 	models = require("../models/models")()
 	new_post = new models.Post()
@@ -28,5 +28,20 @@ exports.posts.create = (req, res) ->
 	new_post.save (err) ->
 		if !err
 			res.json new_post, 200
+		else
+			res.json err, 404
+
+# PUT update Post
+exports.posts.update = (req, res) ->
+	Post = require("../models/models")().Post	
+	Post.findOne {_id: req.params.id}, (err, doc) ->
+		if !err
+			doc.message = req.body.message
+			doc.starred = req.body.starred
+			doc.save (err) ->
+				if !err
+					res.json doc, 200
+				else
+					res.json err, 404
 		else
 			res.json err, 404

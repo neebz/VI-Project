@@ -1,5 +1,5 @@
 class window.Post extends Backbone.Model
-
+	idAttribute: "_id"
 	defaults: {
 			message: "",
 			starred: false,

@@ -10,6 +10,8 @@
       Post.__super__.constructor.apply(this, arguments);
     }
 
+    Post.prototype.idAttribute = "_id";
+
     Post.prototype.defaults = {
       message: "",
       starred: false,
@@ -178,6 +180,7 @@
       e.preventDefault();
       current = this.model.get("starred");
       this.model.set("starred", !current);
+      this.model.save();
       return this.parent_view.render();
     };
 

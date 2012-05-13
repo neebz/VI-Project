@@ -71,6 +71,7 @@ class window.PostView extends Backbone.View
 		e.preventDefault()
 		current = @model.get "starred"
 		@model.set "starred", !current
+		@model.save()
 		@parent_view.render()
 
 	render: ->
