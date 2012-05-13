@@ -36,6 +36,7 @@ app.get "/", routes.index
 app.get "/posts", routes.posts.read
 app.post "/posts", routes.posts.create
 app.put "/posts/:id", routes.posts.update
+app.delete "/posts/:id", routes.posts.delete
 
 #run app
 app.listen 3000, ->

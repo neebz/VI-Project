@@ -35,7 +35,7 @@ exports.posts.create = (req, res) ->
 exports.posts.update = (req, res) ->
 	Post = require("../models/models")().Post	
 	Post.findOne {_id: req.params.id}, (err, doc) ->
-		if !err
+		if doc
 			doc.message = req.body.message
 			doc.starred = req.body.starred
 			doc.save (err) ->
@@ -45,3 +45,17 @@ exports.posts.update = (req, res) ->
 					res.json err, 404
 		else
 			res.json err, 404
+
+# PUT delete Post
+exports.posts.delete = (req, res) ->
+	Post = require("../models/models")().Post	
+	Post.findOne {_id: req.params.id}, (err, doc) ->
+		if doc
+			doc.remove (err) ->
+				if !err
+					res.json 400
+				else
+					res.json err, 404
+		else
+			res.json err, 404
+
