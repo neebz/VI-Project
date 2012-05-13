@@ -10,6 +10,25 @@
       Post.__super__.constructor.apply(this, arguments);
     }
 
+    Post.prototype.initialize = function() {
+      var error;
+      error = this.validate(this.attributes);
+      if (error) {
+        this.destroy();
+        return alert(error);
+      }
+    };
+
+    Post.prototype.validate = function(attr) {
+      if (attr.post_message.length > 100) {
+        return "post cannot be greater than 100 characters";
+      } else if (attr.post_message.length === 0) {
+        return "post cannot be empty";
+      } else {
+
+      }
+    };
+
     return Post;
 
   })(Backbone.Model);

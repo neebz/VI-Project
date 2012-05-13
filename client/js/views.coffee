@@ -4,7 +4,7 @@ class window.AppView extends Backbone.View
 	el: "#app_view"
 
 	initialize: ->
-		@filer_type = null
+		Posts.filter_type = null
 		self = @
 		Posts.bind "add", @renderOnePost, this
 		Posts.fetch { 
@@ -23,9 +23,9 @@ class window.AppView extends Backbone.View
 		e.preventDefault()
 		type = $(e.target).attr("id")
 		if type is "all"
-			@filter_type = null
+			Posts.filter_type = null
 		else 
-			@filter_type = type is "starred"
+			Posts.filter_type = type is "starred"
 		@render()
 		
 
@@ -45,13 +45,7 @@ class window.AppView extends Backbone.View
 		console.log @el
 		@$el.find("#posts_list").empty()
 		self = @
-		if @filter_type is null
-			Posts.forEach (p) -> self.renderOnePost p
-		else
-			toggle = @filter_type
-			filtered = Posts.filter (i) -> i.get("starred") == toggle
-			filtered.forEach (p) -> self.renderOnePost p
-
+		Posts.filtered.forEach (p) -> self.renderOnePost p
 		@
 
 
