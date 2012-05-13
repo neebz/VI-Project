@@ -10,13 +10,10 @@
       Post.__super__.constructor.apply(this, arguments);
     }
 
-    Post.prototype.initialize = function() {
-      var error;
-      error = this.validate(this.attributes);
-      if (error) {
-        this.destroy();
-        return alert(error);
-      }
+    Post.prototype.defaults = {
+      message: "",
+      starred: false,
+      created_at: ""
     };
 
     Post.prototype.validate = function(attr) {
@@ -45,6 +42,24 @@
 
     PostsCollection.prototype.url = '/posts';
 
+    PostsCollection.prototype.filter_type = null;
+
+    PostsCollection.prototype.comparator = function(p) {
+      return p.get('created_at') * -1;
+    };
+
+    PostsCollection.prototype.filtered = function() {
+      var toggle;
+      if (this.filter_type === null) {
+        return this;
+      } else {
+        toggle = this.filter_type;
+        return this.filter(function(p) {
+          return p.get("starred") === toggle;
+        });
+      }
+    };
+
     return PostsCollection;
 
   })(Backbone.Collection);
@@ -63,13 +78,14 @@
 
     AppView.prototype.initialize = function() {
       var self;
-      this.filer_type = null;
+      Posts.filter_type = null;
       self = this;
       Posts.bind("add", this.renderOnePost, this);
       return Posts.fetch({
         success: function() {
           return self.render();
-        }
+        },
+        add: true
       });
     };
 
@@ -88,9 +104,9 @@
       e.preventDefault();
       type = $(e.target).attr("id");
       if (type === "all") {
-        this.filter_type = null;
+        Posts.filter_type = null;
       } else {
-        this.filter_type = type === "starred";
+        Posts.filter_type = type === "starred";
       }
       return this.render();
     };
@@ -101,7 +117,6 @@
       text = $("#post_message").val();
       new_post = new Post({
         post_message: text,
-        created_at: new Date(),
         starred: false
       });
       return Posts.add(new_post);
@@ -110,28 +125,18 @@
     AppView.prototype.renderOnePost = function(the_post) {
       var a, posts_list_el;
       posts_list_el = this.$el.find("#posts_list");
-      a = new PostView(the_post);
+      a = new PostView(the_post, this);
       return posts_list_el.prepend(a.render().el);
     };
 
     AppView.prototype.render = function() {
-      var filtered, self, toggle;
+      var self;
       console.log(this.el);
       this.$el.find("#posts_list").empty();
       self = this;
-      if (this.filter_type === null) {
-        Posts.forEach(function(p) {
-          return self.renderOnePost(p);
-        });
-      } else {
-        toggle = this.filter_type;
-        filtered = Posts.filter(function(i) {
-          return i.get("starred") === toggle;
-        });
-        filtered.forEach(function(p) {
-          return self.renderOnePost(p);
-        });
-      }
+      Posts.filtered().forEach(function(p) {
+        return self.renderOnePost(p);
+      });
       return this;
     };
 
@@ -149,8 +154,9 @@
 
     PostView.prototype.templateId = "#post_template";
 
-    PostView.prototype.initialize = function(model) {
-      return this.model = model;
+    PostView.prototype.initialize = function(model, parent_view) {
+      this.model = model;
+      return this.parent_view = parent_view;
     };
 
     PostView.prototype.events = function() {
@@ -171,7 +177,7 @@
       e.preventDefault();
       current = this.model.get("starred");
       this.model.set("starred", !current);
-      return this.render();
+      return this.parent_view.render();
     };
 
     PostView.prototype.render = function() {

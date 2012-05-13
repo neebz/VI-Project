@@ -9,6 +9,7 @@ class window.AppView extends Backbone.View
 		Posts.bind "add", @renderOnePost, this
 		Posts.fetch { 
 			success: -> self.render()
+			add: true
 		}
 
 	events: -> {
@@ -32,28 +33,29 @@ class window.AppView extends Backbone.View
 	addPost: (e) ->
 		e.preventDefault()
 		text = $("#post_message").val()
-		new_post = new Post {post_message: text, created_at: new Date(), starred: false}
+		new_post = new Post {post_message: text, starred: false}
 		Posts.add new_post
 		#new_post.save()
 
 	renderOnePost: (the_post) ->
 		posts_list_el = @$el.find("#posts_list")
-		a = new PostView(the_post)
+		a = new PostView(the_post, @)
 		posts_list_el.prepend a.render().el
 
 	render: ->
 		console.log @el
 		@$el.find("#posts_list").empty()
 		self = @
-		Posts.filtered.forEach (p) -> self.renderOnePost p
+		Posts.filtered().forEach (p) -> self.renderOnePost p
 		@
 
 
 class window.PostView extends Backbone.View
 	templateId: "#post_template"
 
-	initialize: (model) ->
+	initialize: (model, parent_view) ->
 		@model = model
+		@parent_view = parent_view 
 
 	events: -> {
 		"click #delete_post": "deletePost"
@@ -69,7 +71,7 @@ class window.PostView extends Backbone.View
 		e.preventDefault()
 		current = @model.get "starred"
 		@model.set "starred", !current
-		@render()
+		@parent_view.render()
 
 	render: ->
 		template = _.template($(@templateId).html())
