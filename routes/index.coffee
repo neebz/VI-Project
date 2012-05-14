@@ -42,7 +42,7 @@ exports.posts.update = (req, res) ->
 				if !err
 					res.json doc, 200
 				else
-					res.json err, 404
+					res.json err, 400
 		else
 			res.json err, 404
 
@@ -53,9 +53,9 @@ exports.posts.delete = (req, res) ->
 		if doc
 			doc.remove (err) ->
 				if !err
-					res.json 400
+					res.json {}, 200
 				else
-					res.json err, 404
+					res.json err, 400
 		else
 			res.json err, 404
 
