@@ -1,3 +1,5 @@
+# Single instance of the db is created when app is started
+
 mongoose = require "mongoose"
 
 module.exports.initialize = () ->

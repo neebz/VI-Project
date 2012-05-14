@@ -21,18 +21,18 @@ class window.AppView extends Backbone.View
 
 	filterPosts: (e) ->
 		e.preventDefault()
-		type = $(e.target).attr("id")
+		type = $(e.target).attr("id") 
 		if type is "all"
-			Posts.filter_type = null
+			Posts.filter_type = null # null is to show all
 		else 
-			Posts.filter_type = type is "starred"
+			Posts.filter_type = type is "starred" # else set value accordingly 
 		@render()
 		
 
 	renderOnePost: (the_post) ->
 		if the_post.isValid()
 			posts_list_el = @$el.find("#posts_list")
-			a = new PostView(the_post, @)
+			a = new PostView(the_post, @) # pass the current view in case we need to render it from an internal event
 			posts_list_el.prepend a.render().el
 
 	render: ->
@@ -55,7 +55,7 @@ class window.AddPostView extends Backbone.View
 		new_post = new Post {message: text, starred: false}
 		new_post.save {message: text, starred: false}, { 
 			success: (model, res) ->
-				Posts.add new_post
+				Posts.add new_post # add in collection while successfully added
 			error: (model, res) -> 
 				if res?.status? and res.status is 0
 					alert "Can't connect to internet"
