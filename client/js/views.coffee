@@ -34,8 +34,9 @@ class window.AppView extends Backbone.View
 		e.preventDefault()
 		text = $("#post_message").val()
 		new_post = new Post {message: text, starred: false}
-		Posts.add new_post
-		new_post.save {}, { 
+		new_post.save {message: text, starred: false}, { 
+			success: (model, res) ->
+				Posts.add new_post
 			error: (model, res) -> 
 				if res?.status? and res.status is 0
 					alert "Can't connect to internet"

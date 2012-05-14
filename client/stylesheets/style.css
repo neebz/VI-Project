@@ -6,3 +6,33 @@ body {
 a {
   color: #00B7FF;
 }
+
+
+button {
+	margin:5px 5px 5px 0px;
+	font-size:15px;
+}
+
+textarea {
+	width:400px;
+}
+
+.post {
+	background-color:#F2F2F2;
+	padding:5px;
+	margin-bottom:5px;
+	border-bottom:1px solid lightGray;
+}
+.post_message {
+	font-size:18px;
+	margin:10px;
+}
+
+.actions{
+	font-size:12px;
+	margin-left:10px;
+}
+
+.actions a {
+	margin-right:5px;
+}

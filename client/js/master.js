@@ -12,6 +12,8 @@
 
     Post.prototype.idAttribute = "_id";
 
+    Post.prototype.urlRoot = '/posts';
+
     Post.prototype.defaults = {
       message: "",
       starred: false,
@@ -121,8 +123,13 @@
         message: text,
         starred: false
       });
-      Posts.add(new_post);
-      return new_post.save({}, {
+      return new_post.save({
+        message: text,
+        starred: false
+      }, {
+        success: function(model, res) {
+          return Posts.add(new_post);
+        },
         error: function(model, res) {
           if (((res != null ? res.status : void 0) != null) && res.status === 0) {
             return alert("Can't connect to internet");

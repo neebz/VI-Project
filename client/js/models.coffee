@@ -1,5 +1,7 @@
 class window.Post extends Backbone.Model
 	idAttribute: "_id"
+	urlRoot: '/posts'
+	
 	defaults: {
 			message: "",
 			starred: false,
