@@ -4,6 +4,7 @@ class window.AppView extends Backbone.View
 	el: "#app_view"
 
 	initialize: ->
+		new AddPostView()
 		Posts.filter_type = null
 		self = @
 		Posts.bind "add", @renderOnePost, this
@@ -13,8 +14,6 @@ class window.AppView extends Backbone.View
 		}
 
 	events: -> {
-		"submit #new_post_form": "addPost"
-		"click #submit_post": "addPost"
 		"click #all" : "filterPosts"
 		"click #starred" : "filterPosts"
 		"click #unstarred" : "filterPosts"
@@ -30,20 +29,6 @@ class window.AppView extends Backbone.View
 		@render()
 		
 
-	addPost: (e) ->
-		e.preventDefault()
-		text = $("#post_message").val()
-		new_post = new Post {message: text, starred: false}
-		new_post.save {message: text, starred: false}, { 
-			success: (model, res) ->
-				Posts.add new_post
-			error: (model, res) -> 
-				if res?.status? and res.status is 0
-					alert "Can't connect to internet"
-				else
-					alert res
-		}
-
 	renderOnePost: (the_post) ->
 		if the_post.isValid()
 			posts_list_el = @$el.find("#posts_list")
@@ -55,6 +40,31 @@ class window.AppView extends Backbone.View
 		self = @
 		Posts.filtered().forEach (p) -> self.renderOnePost p
 		@
+
+
+class window.AddPostView extends Backbone.View
+	el: "#add_post"
+	events: {
+		"submit #new_post_form": "addPost"
+		"click #submit_post": "addPost"
+	}
+
+	addPost: (e) ->
+		e.preventDefault()
+		text = @$el.find("#post_message").val()
+		new_post = new Post {message: text, starred: false}
+		new_post.save {message: text, starred: false}, { 
+			success: (model, res) ->
+				Posts.add new_post
+			error: (model, res) -> 
+				if res?.status? and res.status is 0
+					alert "Can't connect to internet"
+				else
+					alert res
+		}
+
+		render: -> @
+
 
 
 class window.PostView extends Backbone.View

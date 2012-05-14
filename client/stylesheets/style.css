@@ -14,7 +14,8 @@ button {
 }
 
 textarea {
-	width:400px;
+	width:500px;
+	font-size:18px;
 }
 
 .post {
@@ -23,6 +24,13 @@ textarea {
 	margin-bottom:5px;
 	border-bottom:1px solid lightGray;
 }
+
+#date {
+	font-size:10px;
+	color:gray;
+	float:right;
+}
+
 .post_message {
 	font-size:18px;
 	margin:10px;

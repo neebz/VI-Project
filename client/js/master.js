@@ -82,6 +82,7 @@
 
     AppView.prototype.initialize = function() {
       var self;
+      new AddPostView();
       Posts.filter_type = null;
       self = this;
       Posts.bind("add", this.renderOnePost, this);
@@ -95,8 +96,6 @@
 
     AppView.prototype.events = function() {
       return {
-        "submit #new_post_form": "addPost",
-        "click #submit_post": "addPost",
         "click #all": "filterPosts",
         "click #starred": "filterPosts",
         "click #unstarred": "filterPosts"
@@ -113,31 +112,6 @@
         Posts.filter_type = type === "starred";
       }
       return this.render();
-    };
-
-    AppView.prototype.addPost = function(e) {
-      var new_post, text;
-      e.preventDefault();
-      text = $("#post_message").val();
-      new_post = new Post({
-        message: text,
-        starred: false
-      });
-      return new_post.save({
-        message: text,
-        starred: false
-      }, {
-        success: function(model, res) {
-          return Posts.add(new_post);
-        },
-        error: function(model, res) {
-          if (((res != null ? res.status : void 0) != null) && res.status === 0) {
-            return alert("Can't connect to internet");
-          } else {
-            return alert(res);
-          }
-        }
-      });
     };
 
     AppView.prototype.renderOnePost = function(the_post) {
@@ -160,6 +134,55 @@
     };
 
     return AppView;
+
+  })(Backbone.View);
+
+  window.AddPostView = (function(_super) {
+
+    __extends(AddPostView, _super);
+
+    function AddPostView() {
+      AddPostView.__super__.constructor.apply(this, arguments);
+    }
+
+    AddPostView.prototype.el = "#add_post";
+
+    AddPostView.prototype.events = {
+      "submit #new_post_form": "addPost",
+      "click #submit_post": "addPost"
+    };
+
+    AddPostView.prototype.addPost = function(e) {
+      var new_post, text;
+      e.preventDefault();
+      text = this.$el.find("#post_message").val();
+      new_post = new Post({
+        message: text,
+        starred: false
+      });
+      new_post.save({
+        message: text,
+        starred: false
+      }, {
+        success: function(model, res) {
+          return Posts.add(new_post);
+        },
+        error: function(model, res) {
+          if (((res != null ? res.status : void 0) != null) && res.status === 0) {
+            return alert("Can't connect to internet");
+          } else {
+            return alert(res);
+          }
+        }
+      });
+      return {
+        render: function() {
+          return this;
+        }
+      };
+    };
+
+    return AddPostView;
 
   })(Backbone.View);
 

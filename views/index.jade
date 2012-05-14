@@ -1,7 +1,7 @@
 h1= "Welcome to VI Project"
 
 #app_view
-	.add_post
+	#add_post
 		p
 			a#all(href="#") All
 			span  | 
@@ -16,7 +16,7 @@ h1= "Welcome to VI Project"
 			div
 				button#submit_post(type="submit") Add Post
 
-	div#posts_list
+	#posts_list
 
 script#post_template(type="text/template")
 	.post
@@ -31,5 +31,5 @@ script#post_template(type="text/template")
 			span
 				a#star_toggle.post_links(href="#") Star
 			<% } %>
-			span
-				<%= created_at %>
+			span#date
+				<%= moment(created_at).format("DD MMMM YYYY HH:mm") %>
