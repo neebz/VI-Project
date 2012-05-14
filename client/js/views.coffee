@@ -55,6 +55,7 @@ class window.AddPostView extends Backbone.View
 		new_post = new Post {message: text, starred: false}
 		new_post.save {message: text, starred: false}, { 
 			success: (model, res) ->
+				@$el.find("#post_message").val("")
 				Posts.add new_post # add in collection while successfully added
 			error: (model, res) -> 
 				if res?.status? and res.status is 0
