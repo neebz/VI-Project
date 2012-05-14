@@ -35,7 +35,13 @@ class window.AppView extends Backbone.View
 		text = $("#post_message").val()
 		new_post = new Post {message: text, starred: false}
 		Posts.add new_post
-		new_post.save({}, {error: (model, res) -> alert(res) })
+		new_post.save {}, { 
+			error: (model, res) -> 
+				if res?.status? and res.status is 0
+					alert "Can't connect to internet"
+				else
+					alert res
+		}
 
 	renderOnePost: (the_post) ->
 		if the_post.isValid()

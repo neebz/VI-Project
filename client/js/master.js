@@ -124,7 +124,11 @@
       Posts.add(new_post);
       return new_post.save({}, {
         error: function(model, res) {
-          return alert(res);
+          if (((res != null ? res.status : void 0) != null) && res.status === 0) {
+            return alert("Can't connect to internet");
+          } else {
+            return alert(res);
+          }
         }
       });
     };
