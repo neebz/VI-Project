@@ -122,19 +122,24 @@
         starred: false
       });
       Posts.add(new_post);
-      return new_post.save();
+      return new_post.save({}, {
+        error: function(model, res) {
+          return alert(res);
+        }
+      });
     };
 
     AppView.prototype.renderOnePost = function(the_post) {
       var a, posts_list_el;
-      posts_list_el = this.$el.find("#posts_list");
-      a = new PostView(the_post, this);
-      return posts_list_el.prepend(a.render().el);
+      if (the_post.isValid()) {
+        posts_list_el = this.$el.find("#posts_list");
+        a = new PostView(the_post, this);
+        return posts_list_el.prepend(a.render().el);
+      }
     };
 
     AppView.prototype.render = function() {
       var self;
-      console.log(this.el);
       this.$el.find("#posts_list").empty();
       self = this;
       Posts.filtered().forEach(function(p) {

@@ -8,8 +8,8 @@ module.exports = ->
 		created_at: Date
 	}
 
-	Post.path('message').validate  (v) ->
-	  v.length <= 100
+	Post.path('message').validate (v) -> if v then (v.length > 0 and v.length <= 100) else false
+	  
 
 	mongoose.model 'Post', Post ;	
 	models.Post = mongoose.model 'Post'

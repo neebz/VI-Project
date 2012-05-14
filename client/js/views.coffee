@@ -35,15 +35,15 @@ class window.AppView extends Backbone.View
 		text = $("#post_message").val()
 		new_post = new Post {message: text, starred: false}
 		Posts.add new_post
-		new_post.save()
+		new_post.save({}, {error: (model, res) -> alert(res) })
 
 	renderOnePost: (the_post) ->
-		posts_list_el = @$el.find("#posts_list")
-		a = new PostView(the_post, @)
-		posts_list_el.prepend a.render().el
+		if the_post.isValid()
+			posts_list_el = @$el.find("#posts_list")
+			a = new PostView(the_post, @)
+			posts_list_el.prepend a.render().el
 
 	render: ->
-		console.log @el
 		@$el.find("#posts_list").empty()
 		self = @
 		Posts.filtered().forEach (p) -> self.renderOnePost p
