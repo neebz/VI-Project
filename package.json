@@ -7,5 +7,6 @@
     , "jade": ">= 0.0.1"
     , "stylus": ""
     , "mongoose": ""
+    , "sanitizer": ""
   }
 }

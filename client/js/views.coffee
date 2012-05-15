@@ -61,8 +61,13 @@ class window.AddPostView extends Backbone.View
 			error: (model, res) -> 
 				if res?.status? and res.status is 0
 					alert "Can't connect to internet"
+				else if res.status? and res.status is 400
+					alert "Invalid input"
+				else if res instanceof Object
+					alert "Sorry some unknown error occurred"
 				else
 					alert res
+					
 		}
 
 		render: -> @

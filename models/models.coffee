@@ -12,7 +12,9 @@ module.exports = ->
 	}
 
 	#add validation here as well in case someone bypasses client-side validation
-	Post.path('message').validate (v) -> if v then (v.length > 0 and v.length <= 100) else false
+	Post.path('message').validate (v) -> 
+		if v then (v.length > 0 and v.length <= 100) else false
+	, "invalid message length"
 	  
 
 	mongoose.model 'Post', Post ;	

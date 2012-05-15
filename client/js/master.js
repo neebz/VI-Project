@@ -153,9 +153,10 @@
     };
 
     AddPostView.prototype.addPost = function(e) {
-      var new_post, text;
+      var add_post_el, new_post, text;
       e.preventDefault();
-      text = this.$el.find("#post_message").val();
+      add_post_el = this.$el.find("#post_message");
+      text = add_post_el.val();
       new_post = new Post({
         message: text,
         starred: false
@@ -165,11 +166,16 @@
         starred: false
       }, {
         success: function(model, res) {
+          add_post_el.val("");
           return Posts.add(new_post);
         },
         error: function(model, res) {
           if (((res != null ? res.status : void 0) != null) && res.status === 0) {
             return alert("Can't connect to internet");
+          } else if ((res.status != null) && res.status === 400) {
+            return alert("Invalid input");
+          } else if (res instanceof Object) {
+            return alert("Sorry some unknown error occurred");
           } else {
             return alert(res);
           }
